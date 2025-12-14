@@ -31,5 +31,10 @@ public class CourseRepository {
             em.remove(course);
         }
     }
+
+    public Course update(Course course) {
+        return em.merge(course);
+    }
+
 }
 

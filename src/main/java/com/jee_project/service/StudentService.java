@@ -24,5 +24,22 @@ public class StudentService {
         return repository.findAll();
     }
 
+    public Student getStudent(long id) {
+        return repository.findById(id);
+    }
+
+
+    @Transactional
+    public void deleteStudent(long id) {
+        repository.remove(id);
+    }
+
+
+
+    public Student getStudentByEmail(String email) {
+        return repository.findByEmail(email);
+    }
+
+
 }
 
