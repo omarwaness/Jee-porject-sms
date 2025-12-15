@@ -1,19 +1,24 @@
 package com.jee_project.servlet;
 
+import com.jee_project.model.Student;
+import com.jee_project.service.StudentService;
+import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.io.IOException;
 
-/**
- * Handles user authentication for both Students and Administrators.
- */
+import java.io.IOException;
+import java.util.Optional;
+
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+
+    @Inject
+    private StudentService studentService;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -32,41 +37,46 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        // **2. Demo Authentication Logic (Hardcoded)**
         boolean isAuthenticated = false;
         String userType = null;
         String redirectUrl = "/login.jsp";
 
+        // 2. Authentication Logic
         if ("student".equalsIgnoreCase(role)) {
-            // DEMO: Any student@uni.edu with password 'password' logs in as student
-            if (username.endsWith("@horizon-tech.tn") && "password".equals(password)) {
-                isAuthenticated = true;
-                userType = "STUDENT";
-                redirectUrl = "/portal.jsp"; // Student Portal
+            Student student = studentService.getStudentByEmail(username);
+
+            if (student != null) {
+                // Keep password hardcoded as requested
+                if ("password".equals(password)) {
+                    isAuthenticated = true;
+                    userType = "STUDENT";
+
+                    // Store the specific Student ID for the Portal
+                    HttpSession session = request.getSession();
+                    session.setAttribute("studentId", student.getId());
+
+                    // Redirect to the Portal Servlet (mapped to /portal)
+                    redirectUrl = "/portal";
+                }
             }
         } else if ("administrator".equalsIgnoreCase(role)) {
-            // DEMO: admin@uni.edu with password 'adminpass' logs in as admin
+            // Admin logic remains hardcoded as requested
             if ("admin@horizon-tech.tn".equals(username) && "adminpass".equals(password)) {
                 isAuthenticated = true;
                 userType = "ADMIN";
-                redirectUrl = "/dashboard.jsp"; // Admin Dashboard
+                redirectUrl = "/dashboard"; // Admin Dashboard
             }
         }
 
         // 3. Handle outcome
         if (isAuthenticated) {
-            // Create or retrieve session
-            HttpSession session = request.getSession();
-
-            // Set session attributes
+            HttpSession session = request.getSession(); // Get existing or create new
             session.setAttribute("isLoggedIn", true);
             session.setAttribute("userRole", userType);
-            session.setAttribute("username", username); // Storing the email as username
+            session.setAttribute("username", username);
 
-            // Redirect to the appropriate page
             response.sendRedirect(request.getContextPath() + redirectUrl);
         } else {
-            // Authentication failed
             request.setAttribute("errorMessage", "Invalid credentials. Please check your role and inputs.");
             request.getRequestDispatcher("/login.jsp").forward(request, response);
         }

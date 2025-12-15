@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
     // Security Check (ensuring only logged-in administrators can view)
     if (session == null || session.getAttribute("isLoggedIn") == null ||
@@ -33,16 +33,24 @@
                     }
                 %>
 
-                <a href="<%= basePath %>/dashboard.jsp" class="py-2 px-4 transition duration-150 ease-in-out <%= isActive(path, "/dashboard.jsp") %>">
+                <a href="<%= basePath %>/dashboard"
+                   class="py-2 px-4 transition duration-150 ease-in-out <%= isActive(path, "/dashboard.jsp") %>">
                     Dashboard
                 </a>
 
-                <a href="<%= basePath %>/admin/courses.jsp" class="py-2 px-4 transition duration-150 ease-in-out <%= isActive(path, "/admin/courses.jsp") %>">
+                <a href="<%= basePath %>/courses"
+                   class="py-2 px-4 transition duration-150 ease-in-out <%= isActive(path, "/courses.jsp") %>">
                     Courses
                 </a>
 
-                <a href="<%= basePath %>/admin/students.jsp" class="py-2 px-4 transition duration-150 ease-in-out <%= isActive(path, "/admin/students.jsp") %>">
+                <a href="<%= basePath %>/students"
+                   class="py-2 px-4 transition duration-150 ease-in-out <%= isActive(path, "/students.jsp") %>">
                     Students
+                </a>
+
+                <a href="<%= basePath %>/enrollments"
+                   class="py-2 px-4 transition duration-150 ease-in-out <%= isActive(path, "/enrollments.jsp") %>">
+                    Enrollments
                 </a>
             </div>
 
@@ -52,8 +60,13 @@
                         Welcome, <%= username != null ? username.split("@")[0] : "Admin" %>
                     </span>
 
-                    <a href="<%= basePath %>/LogoutServlet" class="text-slate-700 border border-slate-300 bg-white hover:bg-slate-100 focus:ring-4 focus:ring-slate-200 font-medium rounded-md text-sm px-4 py-2 transition duration-150 ease-in-out">
-                        <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3v-4a3 3 0 013-3h3m2-3V4a3 3 0 013-3h4a3 3 0 013 3v4"></path></svg>
+                    <a href="<%= basePath %>/LogoutServlet"
+                       class="text-slate-700 border border-slate-300 bg-white hover:bg-slate-100 focus:ring-4 focus:ring-slate-200 font-medium rounded-md text-sm px-4 py-2 transition duration-150 ease-in-out">
+                        <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3v-4a3 3 0 013-3h3m2-3V4a3 3 0 013-3h4a3 3 0 013 3v4"></path>
+                        </svg>
                         Logout
                     </a>
                 </div>

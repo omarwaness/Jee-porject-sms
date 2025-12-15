@@ -37,8 +37,6 @@ public class CourseService {
         if (existing == null) {
             return null;
         }
-
-        // Update fields
         existing.setName(updatedCourse.getName());
         existing.setInstructor(updatedCourse.getInstructor());
         existing.setCredits(updatedCourse.getCredits());
@@ -46,7 +44,6 @@ public class CourseService {
 
         return repository.update(existing);
     }
-
 
     @Transactional
     public void deleteCourse(Long id) {

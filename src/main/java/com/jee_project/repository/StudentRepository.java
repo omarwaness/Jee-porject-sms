@@ -33,6 +33,10 @@ public class StudentRepository {
         }
     }
 
+    public Student update(Student student) {
+        return em.merge(student);
+    }
+
 
     public Student findByEmail(String email) {
         return em.createQuery(

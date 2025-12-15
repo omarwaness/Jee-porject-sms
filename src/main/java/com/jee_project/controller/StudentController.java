@@ -34,6 +34,16 @@ public class StudentController {
         return service.getStudent(id);
     }
 
+    @PUT
+    @Path("/{id}")
+    public Response update(@PathParam("id") long id, Student student) {
+        Student updated = service.updateStudent(id, student);
+        if (updated == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(updated).build();
+    }
+
     @DELETE
     @Path("/{id}")
     public void deleteById(@PathParam("id") long id) {

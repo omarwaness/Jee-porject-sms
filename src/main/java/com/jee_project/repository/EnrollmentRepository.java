@@ -24,4 +24,22 @@ public class EnrollmentRepository {
         return em.createQuery("SELECT e FROM Enrollment e", Enrollment.class)
                 .getResultList();
     }
+
+    public List<Enrollment> findByStudentId(Long studentId) {
+        return em.createQuery(
+                        "SELECT e FROM Enrollment e WHERE e.student.id = :studentId",
+                        Enrollment.class
+                )
+                .setParameter("studentId", studentId)
+                .getResultList();
+    }
+
+    public List<Enrollment> findByCourseId(Long courseId) {
+        return em.createQuery(
+                        "SELECT e FROM Enrollment e WHERE e.course.id = :courseId",
+                        Enrollment.class
+                )
+                .setParameter("courseId", courseId)
+                .getResultList();
+    }
 }

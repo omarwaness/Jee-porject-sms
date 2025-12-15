@@ -1,5 +1,6 @@
 package com.jee_project.service;
 
+import com.jee_project.dto.EnrollmentResponse;
 import com.jee_project.model.Course;
 import com.jee_project.model.Enrollment;
 import com.jee_project.model.Student;
@@ -10,6 +11,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
@@ -26,7 +28,7 @@ public class EnrollmentService {
 
     @Transactional
     public void enrollStudent(Long studentId, Long courseId,
-            String grade, LocalDate enrollmentDate) {
+            String grade) {
 
         Student student = studentRepository.findById(studentId);
         Course course = courseRepository.findById(courseId);
@@ -35,6 +37,7 @@ public class EnrollmentService {
             throw new IllegalArgumentException("Student or Course not found");
         }
 
+        LocalDate enrollmentDate = LocalDate.now();
         Enrollment enrollment = new Enrollment(student, course, grade, enrollmentDate);
 
         enrollmentRepository.save(enrollment);
@@ -43,4 +46,40 @@ public class EnrollmentService {
     public List<Enrollment> getAllEnrollments() {
         return enrollmentRepository.findAll();
     }
+
+    @Transactional
+    public List<EnrollmentResponse> getEnrollmentsByStudentId(Long studentId) {
+        List<Enrollment> enrollments = enrollmentRepository.findByStudentId(studentId);
+        List<EnrollmentResponse> enrollmentResponses = new ArrayList<>();
+
+        for (Enrollment enrollment : enrollments) {
+            EnrollmentResponse enrollmentResponse = new EnrollmentResponse();
+
+            enrollmentResponse.setStudentName(enrollment.getStudent().getName());
+            enrollmentResponse.setCourseName(enrollment.getCourse().getName());
+            enrollmentResponse.setGrade(enrollment.getGrade());
+            enrollmentResponse.setEnrollmentDate(enrollment.getEnrollmentDate());
+
+            enrollmentResponses.add(enrollmentResponse);
+        }
+        return enrollmentResponses;
+    }
+
+    @Transactional
+    public List<EnrollmentResponse> getEnrollmentsByCourseId(Long courseId) {
+        List<Enrollment> enrollments = enrollmentRepository.findByCourseId(courseId);
+        List<EnrollmentResponse> enrollmentResponses = new ArrayList<>();
+
+        for (Enrollment enrollment : enrollments) {
+            EnrollmentResponse enrollmentResponse = new EnrollmentResponse();
+
+            enrollmentResponse.setStudentName(enrollment.getStudent().getName());
+            enrollmentResponse.setCourseName(enrollment.getCourse().getName());
+            enrollmentResponse.setGrade(enrollment.getGrade());
+            enrollmentResponse.setEnrollmentDate(enrollment.getEnrollmentDate());
+            enrollmentResponses.add(enrollmentResponse);
+        }
+        return enrollmentResponses;
+    }
+
 }
